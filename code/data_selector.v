@@ -43,7 +43,7 @@ module data_selector41(clk,
     output reg [39:0] out_local;
     
     
-    always @(posedge clk or negedge rst_n)
+    always @(posedge clk or posedge rst_n)
     begin
         if (!rst_n) out_x <= 0; // output is all zeros, which means it's false
         case ({control_x[1],control_x[0]})
@@ -55,7 +55,7 @@ module data_selector41(clk,
         endcase
     end
     
-    always @(posedge clk or negedge rst_n)
+    always @(posedge clk or posedge rst_n)
     begin
         if (!rst_n) out_y <= 0; // output is all zeros, which means it's false
         case ({control_y[1],control_y[0]})
@@ -67,7 +67,7 @@ module data_selector41(clk,
         endcase
     end
     
-    always @(posedge clk or negedge rst_n)
+    always @(posedge clk or posedge rst_n)
     begin
         if (!rst_n) out_local <= 0; // output is all zeros, which means it's false
         case ({control_local[1],control_local[0]})

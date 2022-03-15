@@ -1,6 +1,10 @@
 // readme:
 // This code transfer the output of router_algorithm to the control signal of data_selector41
 
+
+// eg:
+
+
 // parameter:
 // clk(clock)
 // rst_n(negatively effecitve)
@@ -36,7 +40,7 @@ module transport (clk,
     // input [39:0] din_y;
     // input [39:0] din_local;
     
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or posedge rst_n) begin
         if (!rst_n)
         begin
             issue     <= 0;  // neo problem
@@ -51,7 +55,7 @@ module transport (clk,
             endcase
     end
     
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or posedge rst_n) begin
         if (!rst_n) begin
             issue     <= 0;
             control_y <= 0;
@@ -65,7 +69,7 @@ module transport (clk,
             endcase
     end
     
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or posedge rst_n) begin
         if (!rst_n) begin
             control_local <= 0;
             issue         <= 0;

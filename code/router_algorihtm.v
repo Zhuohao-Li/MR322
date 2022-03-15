@@ -67,7 +67,7 @@ module Router_algorithm(clk,
     assign judgement_signal_y     = current_location ^~ destination_location_y;
     assign judgement_signal_local = current_location ^~ destination_location_local;
     
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or posedge rst_n) begin
         if (!rst_n) dout_x <= 00;
         case (judgement_signal_x)
             2'b00: dout_x   <= 01;
@@ -78,7 +78,7 @@ module Router_algorithm(clk,
         endcase
     end
     
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or posedge rst_n) begin
         if (!rst_n) dout_y <= 00;
         case (judgement_signal_y)
             2'b00: dout_y   <= 01;
@@ -89,7 +89,7 @@ module Router_algorithm(clk,
         endcase
     end
     
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or posedge rst_n) begin
         if (!rst_n) dout_local <= 00;
         case (judgement_signal_local)
             2'b00: dout_local   <= 01;
