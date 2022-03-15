@@ -15,6 +15,7 @@
 // dout_local(40-bit data from local path mux)
 
 // released: 3/4/2022
+// author: zhuohaoli
 
 module Router_algorithm(clk,
                         rst_n,
