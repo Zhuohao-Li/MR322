@@ -1,5 +1,5 @@
 // readme:
-// This code is implement a router. It receives a packet of data of 40-bit and caculate which direction should it transfer to.
+// This implements a router internal logic. It receives a packet of data of 40-bit and caculate the where (x,y,local) it should transfer to.
 // Input is a 40-bit data packet
 // Output is the direction (X, Y, Local), X---01, Y---10, Local---11
 

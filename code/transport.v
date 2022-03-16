@@ -1,17 +1,13 @@
 // readme:
 // This code transfer the output of router_algorithm to the control signal of data_selector41
 
-
-// eg:
-
-
 // parameter:
 // clk(clock)
 // rst_n(negatively effecitve)
-// router_algorithm_out_x (the last output of router_algorithm x)
+// router_algorithm_out_x (the last output of router_algorithm x, it shows where data x should be transferred to)
 // router_algorithm_out_y (the last output of router_algorithm y)
 // router_algorithm_out_local (the last output of router_algorithm local)
-// control_x (control x)
+// control_x (path x decide which data should be valid)
 // control_y (control y)
 // control_local (control local)
 
