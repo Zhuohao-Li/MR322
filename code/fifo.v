@@ -1,21 +1,16 @@
-// readme:
-// This code implement FIFO
+//readme
+//this is an Asynchronous FIFO 
+//Capacity of up to 8
 
-// parameter:
-// wclk(write clock)
-// rclk(read clock)
-// rst_n(negatively effecitve)
-// wr_en (write enable)
-// wdata (write data)
-// rd_en (read_enable)
+//posedge clk and rst_n
+//wa :addresswidth for data 
+//wd :datawidth
+//wclk :writeclock
+//rclk :readclock
+//full //empty
 
-// full
-// empty
-// rdata
-// control_localrdata_valid
-
-// released:3/15/2022
-// author: qilong han
+//released:03/16/2022
+//author:qilong han
 
 module fifo_asy #(parameter wa = 3,
                   parameter wd = 4)
