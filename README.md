@@ -32,6 +32,9 @@ My notes serve as an outline for a course. In these notes, I won't dive too deep
 - I enjoy discussing with my peers. I take record of Q&A in course. The answers are summed up from the professor, combining with my own knowledge.
 - For final-term revision, I would make mindmaps from textbook and slides. This part will be uploaded when it comes to last few weeks of a semester.
 
+**The overview of our project**
+![1](images/1.jpg)
+
 ## License
 
 Unlike other repositories on GitHub, I do NOT provide a license for this repository. Thereby, users can not "copy, distribute, or modify your work without being at risk of take-downs, shake-downs, or litigation". This page describes what a user should do on no license project. After all, you're free to view these note yourself. PLEASE DON'T:
