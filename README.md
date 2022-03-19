@@ -33,7 +33,7 @@ My notes serve as an outline for a course. In these notes, I won't dive too deep
 - For final-term revision, I would make mindmaps from textbook and slides. This part will be uploaded when it comes to last few weeks of a semester.
 
 **The overview of our project**
-![1](images/1.jpg)
+![1](images/2.png)
 
 ## License
 
