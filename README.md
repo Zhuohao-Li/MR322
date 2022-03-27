@@ -12,6 +12,14 @@ I'm grateful to every one who wants to contribute. However, I decided not to acc
 
 _DIC Project_ by Professor W.F He, 2022 Spring
 
+## Category
+
+- `code`:
+  - `v.1.0`: In order to relief version control flow, I decide to list all big versions **manually**. After the projects end, I'll merge them. You can also `pull` by GitHub version control principles.
+  - `v.2.0`: Latest source code. They're constructed by pipeline. -----3/27
+- `Document`: Technique instructions and discussion reports files.
+- `images`: All images attached in our documents. (Notes: they're not well organized. Bug will fix later)
+
 ## Tips
 
 **Commit Policy** I'll only retain the latest commit of this repo. Therefore, you won't be able to browse history. But I'll state what changes I've made each time in CHANGELOG.md. This repo will be updated in-time during the process of the class taken.
