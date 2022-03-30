@@ -47,7 +47,7 @@ module transport (clk,
     
     always @(posedge clk or posedge rst_n) begin
         // reset
-        if (!rst_n) begin
+        if (rst_n) begin
             control_x     <= 2'b00;
             control_y     <= 2'b00;
             control_local <= 2'b00;
@@ -62,27 +62,25 @@ module transport (clk,
                 // transfer from router outcome to control signals at mux later
                 
                 case (router_algorithm_out_x)
-                    2'b00: control_x     <= 2'b00; // if there's something wrong, control signal will select an invalid one
                     2'b01: control_x     <= 2'b01; // if data_x is about to go 01 direction(x), x fifo will select 01(data x)
                     2'b10: control_y     <= 2'b01; // if data_x is about to go 10 direction(y), y fifo will select 01(data x)
                     2'b11: control_local <= 2'b01; // if data_x is about to go 11 direction(local), local fifo will select 01(data x)
-                    default:   control_x <= 2'b00; // other situation will set to be error
+                    default:   ; // other situation will set to be error
                 endcase
                 // the others (y, local) is like above
                 case (router_algorithm_out_y)
-                    2'b00: control_y     <= 2'b00;
                     2'b01: control_x     <= 2'b10;
                     2'b10: control_y     <= 2'b10;
                     2'b11: control_local <= 2'b10;
-                    default:   control_y <= 2'b00;
+                    default:   ;
                 endcase
                 
+                
                 case (router_algorithm_out_local)
-                    2'b00: control_local     <= 2'b00;
-                    2'b01: control_x         <= 2'b11;
-                    2'b10: control_y         <= 2'b11;
-                    2'b11: control_local     <= 2'b11;
-                    default:   control_local <= 2'b00;
+                    2'b01: control_x     <= 2'b11;
+                    2'b10: control_y     <= 2'b11;
+                    2'b11: control_local <= 2'b11;
+                    default:   ;
                 endcase
             end
             
@@ -92,67 +90,124 @@ module transport (clk,
             else if (fail == 3'b001)
             begin // x is wrong
             case (router_algorithm_out_y)
-                2'b00: control_y     <= 2'b00;
+                
                 2'b01: control_x     <= 2'b10;
                 2'b10: control_y     <= 2'b10;
                 2'b11: control_local <= 2'b10;
-                default:   control_y <= 2'b00;
+                default:   ;
             endcase
             
             case (router_algorithm_out_local)
-                2'b00: control_local     <= 2'b00;
-                2'b01: control_x         <= 2'b11;
-                2'b10: control_y         <= 2'b11;
-                2'b11: control_local     <= 2'b11;
-                default:   control_local <= 2'b00;
+                
+                2'b01: control_x     <= 2'b11;
+                2'b10: control_y     <= 2'b11;
+                2'b11: control_local <= 2'b11;
+                default:   ;
             endcase
-        end
-        
-        else if (fail == 3'b010) begin
-        case (router_algorithm_out_x)
-            2'b00: control_x     <= 2'b00;
-            2'b01: control_x     <= 2'b01;
-            2'b10: control_y     <= 2'b01;
-            2'b11: control_local <= 2'b01;
-            default:   control_x <= 2'b00;
-        endcase
-        
-        case (router_algorithm_out_local)
-            2'b00: control_local     <= 2'b00;
-            2'b01: control_x         <= 2'b11;
-            2'b10: control_y         <= 2'b11;
-            2'b11: control_local     <= 2'b11;
-            default:   control_local <= 2'b00;
-        endcase
-    end
-    
-    else if (fail == 3'b100) begin
-    case (router_algorithm_out_x)
-        2'b00: control_x     <= 2'b00;
-        2'b01: control_x     <= 2'b01;
-        2'b10: control_y     <= 2'b01;
-        2'b11: control_local <= 2'b01;
-        default:   control_x <= 2'b00;
-    endcase
-    
-    case (router_algorithm_out_y)
-        2'b00: control_y     <= 2'b00;
-        2'b01: control_x     <= 2'b10;
-        2'b10: control_y     <= 2'b10;
-        2'b11: control_local <= 2'b10;
-        default:   control_y <= 2'b00;
-    endcase
-    end
-    
-    end
-    
-    else begin // if control_clk is disabled, a bubble occurs here
-    control_x     <= 2'b00;
-    control_y     <= 2'b00;
-    control_local <= 2'b00;
-    end
-    
-    end
-    end
-    
-endmodule
+            
+            case (router_algorithm_out_x)
+                2'b01: begin
+                    if ((router_algorithm_out_y == 2'b10) || (router_algorithm_out_local == 2'b10))
+                        control_local  <= 2'b00;
+                        else control_y <= 2'b00;
+                        end
+                        2'b10:begin
+                        if ((router_algorithm_out_y == 2'b01) || (router_algorithm_out_local == 2'b01))
+                            control_local  <= 2'b00;
+                            else control_x <= 2'b00;
+                            end
+                            2'b11:begin
+                            if ((router_algorithm_out_y == 2'b01) || (router_algorithm_out_local == 2'b01))
+                                control_y      <= 2'b00;
+                                else control_x <= 2'b00;
+                                end
+                                default: ;
+                                endcase
+                                end
+                    
+                    else if (fail == 3'b010) begin
+                        case (router_algorithm_out_x)
+                            
+                            2'b01: control_x     <= 2'b01;
+                            2'b10: control_y     <= 2'b01;
+                            2'b11: control_local <= 2'b01;
+                            default:   ;
+                        endcase
+                        
+                        case (router_algorithm_out_local)
+                            
+                            2'b01: control_x     <= 2'b11;
+                            2'b10: control_y     <= 2'b11;
+                            2'b11: control_local <= 2'b11;
+                            default:   ;
+                        endcase
+                        
+                        case (router_algorithm_out_y)
+                            2'b01: begin
+                                if ((router_algorithm_out_x == 2'b10) || (router_algorithm_out_local == 2'b10))
+                                    control_local  <= 2'b00;
+                                    else control_y <= 2'b00;
+                                    end
+                                    2'b10:begin
+                                    if ((router_algorithm_out_x == 2'b01) || (router_algorithm_out_local == 2'b01))
+                                        control_local  <= 2'b00;
+                                        else control_x <= 2'b00;
+                                        end
+                                        2'b11:begin
+                                        if ((router_algorithm_out_x == 2'b01) || (router_algorithm_out_local == 2'b01))
+                                            control_y      <= 2'b00;
+                                            else control_x <= 2'b00;
+                                            end
+                                            default: ;
+                                            endcase
+                                            end
+                                
+                                else if (fail == 3'b100) begin
+                                    case (router_algorithm_out_x)
+                                        
+                                        2'b01: control_x     <= 2'b01;
+                                        2'b10: control_y     <= 2'b01;
+                                        2'b11: control_local <= 2'b01;
+                                        default:   ;
+                                    endcase
+                                    
+                                    case (router_algorithm_out_y)
+                                        
+                                        2'b01: control_x     <= 2'b10;
+                                        2'b10: control_y     <= 2'b10;
+                                        2'b11: control_local <= 2'b10;
+                                        default:   ;
+                                    endcase
+                                    
+                                    case (router_algorithm_out_local)
+                                        2'b01: begin
+                                            if ((router_algorithm_out_y == 2'b10) || (router_algorithm_out_x == 2'b10))
+                                                control_local  <= 2'b00;
+                                                else control_y <= 2'b00;
+                                                end
+                                                2'b10:begin
+                                                if ((router_algorithm_out_y == 2'b01) || (router_algorithm_out_x == 2'b01))
+                                                    control_local  <= 2'b00;
+                                                    else control_x <= 2'b00;
+                                                    end
+                                                    2'b11:begin
+                                                    if ((router_algorithm_out_y == 2'b01) || (router_algorithm_out_x == 2'b01))
+                                                        control_y      <= 2'b00;
+                                                        else control_x <= 2'b00;
+                                                        end
+                                                        default: ;
+                                                        endcase
+                                                        end
+                                            
+                                        end
+                                        
+                                        else begin // if control_clk is disabled, a bubble occurs here
+                                            control_x     <= 2'b00;
+                                            control_y     <= 2'b00;
+                                            control_local <= 2'b00;
+                                        end
+                                        
+                                    end
+                                end
+                                
+                                endmodule
