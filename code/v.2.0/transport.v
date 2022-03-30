@@ -11,7 +11,13 @@
 // control_y (control y)
 // control_local (control local)
 
-// released:3/24/2022
+
+// new feature:
+// I verfy the logic. The module must take at least 2 cycles to finished!!!!!
+// In the first cycle, it must be reset and all control_signal is unenabled.
+// In the second cycle, the module can be normally executed.
+
+// released:3/30/2022
 // author: zhuohao li
 
 
@@ -22,7 +28,7 @@ module transport (clk,
                   router_algorithm_out_local,
                   control_x,
                   control_y,
-                  control_local, 
+                  control_local,
                   fail,
                   control_clk);
     
@@ -47,42 +53,44 @@ module transport (clk,
             control_local <= 2'b00;
         end
         
-        // normally go weill
-        else
+        // No reset
+        else begin
+        if (!control_clk) // when control_clk is enabled
         begin
-        if (!control_clk) // control_clk is enabled
-        // if control_clk is disabled, a bubble occurs here
-        begin
-          if(fail!==3'b000)
+            if (fail == 3'b000) // no valid fail signals
             begin
-            case (fail)
-                3'b001: control_x     <= 2'b00;
-                3'b010: control_y     <= 2'b00;
-                3'b100: control_local <= 2'b00;
-                default: begin
-                    control_x     <= 2'b00;
-                    control_y     <= 2'b00;
-                    control_local <= 2'b00;
-                end
-            endcase
-          end
-        else
-          
+                // transfer from router outcome to control signals at mux later
+                
+                case (router_algorithm_out_x)
+                    2'b00: control_x     <= 2'b00; // if there's something wrong, control signal will select an invalid one
+                    2'b01: control_x     <= 2'b01; // if data_x is about to go 01 direction(x), x fifo will select 01(data x)
+                    2'b10: control_y     <= 2'b01; // if data_x is about to go 10 direction(y), y fifo will select 01(data x)
+                    2'b11: control_local <= 2'b01; // if data_x is about to go 11 direction(local), local fifo will select 01(data x)
+                    default:   control_x <= 2'b00; // other situation will set to be error
+                endcase
+                // the others (y, local) is like above
+                case (router_algorithm_out_y)
+                    2'b00: control_y     <= 2'b00;
+                    2'b01: control_x     <= 2'b10;
+                    2'b10: control_y     <= 2'b10;
+                    2'b11: control_local <= 2'b10;
+                    default:   control_y <= 2'b00;
+                endcase
+                
+                case (router_algorithm_out_local)
+                    2'b00: control_local     <= 2'b00;
+                    2'b01: control_x         <= 2'b11;
+                    2'b10: control_y         <= 2'b11;
+                    2'b11: control_local     <= 2'b11;
+                    default:   control_local <= 2'b00;
+                endcase
+            end
+            
             // judgment of the fail signal
             // fail is 3-bit and only the 3 situations are valid
             // otherwise, set all ports invalid
-            
-            
-            // transfer from router outcome to control signals at mux later
-            begin
-            case (router_algorithm_out_x)
-                2'b00: control_x     <= 2'b00;
-                2'b01: control_x     <= 2'b01;
-                2'b10: control_y     <= 2'b01;
-                2'b11: control_local <= 2'b01;
-                default:   control_x <= 2'b00;
-            endcase
-            
+            else if (fail == 3'b001)
+            begin // x is wrong
             case (router_algorithm_out_y)
                 2'b00: control_y     <= 2'b00;
                 2'b01: control_x     <= 2'b10;
@@ -92,14 +100,58 @@ module transport (clk,
             endcase
             
             case (router_algorithm_out_local)
-                2'b00: control_local            <= 2'b00;
+                2'b00: control_local     <= 2'b00;
                 2'b01: control_x         <= 2'b11;
                 2'b10: control_y         <= 2'b11;
                 2'b11: control_local     <= 2'b11;
                 default:   control_local <= 2'b00;
             endcase
         end
+        
+        else if (fail == 3'b010) begin
+        case (router_algorithm_out_x)
+            2'b00: control_x     <= 2'b00;
+            2'b01: control_x     <= 2'b01;
+            2'b10: control_y     <= 2'b01;
+            2'b11: control_local <= 2'b01;
+            default:   control_x <= 2'b00;
+        endcase
+        
+        case (router_algorithm_out_local)
+            2'b00: control_local     <= 2'b00;
+            2'b01: control_x         <= 2'b11;
+            2'b10: control_y         <= 2'b11;
+            2'b11: control_local     <= 2'b11;
+            default:   control_local <= 2'b00;
+        endcase
     end
+    
+    else if (fail == 3'b100) begin
+    case (router_algorithm_out_x)
+        2'b00: control_x     <= 2'b00;
+        2'b01: control_x     <= 2'b01;
+        2'b10: control_y     <= 2'b01;
+        2'b11: control_local <= 2'b01;
+        default:   control_x <= 2'b00;
+    endcase
+    
+    case (router_algorithm_out_y)
+        2'b00: control_y     <= 2'b00;
+        2'b01: control_x     <= 2'b10;
+        2'b10: control_y     <= 2'b10;
+        2'b11: control_local <= 2'b10;
+        default:   control_y <= 2'b00;
+    endcase
+    end
+    
+    end
+    
+    else begin // if control_clk is disabled, a bubble occurs here
+    control_x     <= 2'b00;
+    control_y     <= 2'b00;
+    control_local <= 2'b00;
+    end
+    
     end
     end
     
