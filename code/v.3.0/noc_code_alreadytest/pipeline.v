@@ -1,4 +1,19 @@
+ //readme
+//this is the whole pipline
+//rst_n  (asy)   hign effective 
+//port define refer to the commond of professor
+//when any next fifo is full, stop all pipline wating 
+//when any fail came ,stop all module before transport.v
+//there are some control signals with "con" "control""en"
 //
+//there have fifo router judge store trans dataselect 
+//6 level pipline if no conflict
+//7 level when conflict
+//
+//giving next fifo wclk 
+//geting rclk from premodule
+//released:04/06/2022
+//author:qilong han
 
 module pipline#(
      parameter wd = 40)
