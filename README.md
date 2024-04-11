@@ -1,6 +1,6 @@
-# Dawson's Lee's Lecture Notes
+# SJTU MR322
 
-This repo contains my notes for MR322
+This repo contains notes for MR322
 
 ## Contribution
 
